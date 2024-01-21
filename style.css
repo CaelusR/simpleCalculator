@@ -1,3 +1,57 @@
 * {
     box-sizing: border-box;
 }
+body {
+    font-family: 'Roboto', sans-serif;
+}
+.cabecera {
+    display: flex;
+    justify-content: center;
+    font-weight: 700;
+}
+.cabecera__titulo {
+    font-weight: bold;
+}
+.principal {
+    display: flex;
+    justify-content: center;
+}
+.calculadora {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-width: 35rem;
+    padding: 1.5rem 2rem;
+    gap: 1.5rem;
+    background: rgb(240 240 240);
+    border-radius: 1rem;
+    box-shadow: 0px 10px rgb(152, 153, 148);
+}
+.calculadora__pantalla {
+    display: flex;
+    height: 2rem;
+    align-items: center;
+    background: linear-gradient(rgb(190 217 162),rgb(163 182 137));
+    font-weight: 300;
+    white-space: nowrap;
+    overflow: auto;
+    border-radius: 10px;
+    box-shadow: 0px -4px;
+}
+.calculadora__teclado{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.teclado__tecla {
+    font-size: large;
+    font-weight: 500;
+    flex: 1 0 22%; 
+    background: linear-gradient(rgb(122 123 127), rgb(57 57 59));
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0px 5px;
+}
+.tecla--punto {
+    font-weight: 800;
+}

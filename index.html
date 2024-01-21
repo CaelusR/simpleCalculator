@@ -6,15 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <header class="cabecera">
-        <h1>Calculadora</h1>
+        <h1 class="cabecera__titulo">Calculadora</h1>
     </header>
     <main class="principal">
-        <section>
-            <article class="calculadora__pantalla"></article>
+        <section class="calculadora">
+            <article class="calculadora__pantalla" contenteditable="true" spellcheck="false"></article>
             <article class="calculadora__teclado">
                 <button class="teclado__tecla tecla--numero">7</button>
                 <button class="teclado__tecla tecla--numero">8</button>
@@ -29,7 +32,7 @@
                 <button class="teclado__tecla tecla--numero">3</button>
                 <button class="teclado__tecla tecla--operacion">-</button>
                 <button class="teclado__tecla tecla--numero">0</button>
-                <button class="teclado__tecla">.</button>
+                <button class="teclado__tecla tecla--punto">.</button>
                 <button class="teclado__tecla tecla--resultado">=</button>
                 <button class="teclado__tecla tecla--operacion">+</button>
             </article>
