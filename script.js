@@ -1,7 +1,6 @@
 let resultado = document.getElementById('res');
 let tecla;
 let operaciones=[];
-const esNum = /^[0-9]*$/;
 
 //por medio de la delegacion de eventos, todos los botones tendran evento click
 let delegEvent = document.querySelector('.calculadora__teclado');
@@ -21,9 +20,8 @@ function scrnDisplay(evento) {
         if(operaciones.includes(caracter)){
             operaciones.pop();
         }
-        resultado=resultado.sub;
-    }
-    else {
+        resultado.innerHTML=resultado.innerHTML.substring(0,resultado.innerHTML.length-1);
+    } else {
         operaciones=[];
         resultado.innerHTML="";
     }
@@ -40,11 +38,22 @@ function opEnPantallaTec(evento) {
 
 //mostrar resultado
 function resEnPantalla() {
-    resultado.innerHTML=calcRes();
+    let numerosCad = resultado.innerHTML.split(/[\+\-\*\/]/);
+    if (numerosCad.some(str => !esNumeroValido(str))) {
+        resultado.innerHTML = 'Error: entrada no válida(rev. los numeros)';
+    } else {
+        if (numerosCad.some(str => str.includes('.'))) {
+            numerosCad = numerosCad.map(str => parseFloat(str));
+        } else {
+            numerosCad= numerosCad.map(str => parseInt(str, 10));
+        }
+        resultado.innerHTML=calcRes(numerosCad,operaciones);
+    }
     operaciones=[];
 }
 //controlar el teclado
 let tecladoPres = function(e) {
+    console.log(e);
     if((e.key >= 0 && e.key <= 9) || e.key == "."){
         numEnPantallaTec(e.key);
       }
@@ -72,44 +81,47 @@ function esNumeroValido(numero) {
     const regex = /^\d*\.?\d+$/;
     return regex.test(numero);
 }
-function calcRes() {
-    let numerosCad = resultado.innerHTML.split(/[\+\-\*\/]/);
-    if (numerosCad.some(str => !esNumeroValido(str))) {
-        return 'Error: entrada no válida(rev. los numeros)';
-    }
-    // return numeros.length;
-    else if (numerosCad.length>1) {
-        let numeros;
-        let resAux;
-        if (numerosCad.some(str => str.includes('.'))) {
-            numeros = numerosCad.map(str => parseFloat(str));
-        } else {
-            numeros = numerosCad.map(str => parseInt(str, 10));
-        }
-        let contadorOp = 0;
-        resAux = numeros[0];
-        for(let i=1; i<numeros.length; i++) {
-            if(numeros[i]==0) return 'Error: No es posible dividir entre cero'
-            switch (operaciones[contadorOp]){    
+function calcRes(numerosCad, operaciones) {
+    if(numerosCad.length>=1) {
+        //let resAux;
+        let resAux = numerosCad[0];
+        for(let i=1; i<numerosCad.length; i++) {
+            if(numerosCad[i]==0&&operaciones[i-1]==="/") return 'Error: No es posible dividir entre cero';
+            else if(ordenOp(operaciones[i-1], operaciones[i])){
+                numerosCad[i]=calcRes(numerosCad.slice(i), operaciones.slice(i));
+                numerosCad=numerosCad.slice(0,i+1);
+            }
+            switch (operaciones[i-1]){    
                 case "+": 
-                    resAux += numeros[i];
+                    resAux += numerosCad[i];
                     break;
                 case "-": 
-                    resAux -= numeros[i];
+                    resAux -= numerosCad[i];
                     break;
                 case "*": 
-                    resAux *= numeros[i];
+                    resAux *= numerosCad[i];
                     break;
                 case "/": 
-                    resAux /= numeros[i];
+                    resAux /= numerosCad[i];
                     break;
                 default:
                     return resAux = "Error: operacion no válida"; 
             }
-            contadorOp++;
         }
         return resAux;
     }   
+}
+//verificamos si la operacion 1 tiene un nvl de orden menor que la 2
+function ordenOp(op1, op2) {
+    let opCad =[op1, op2];
+    let ordenOperacion = [];
+    for(let i = 0; opCad.length>i;i++){
+        if(opCad[i]==="*")      ordenOperacion.push(3);
+        else if(opCad[i]==="/") ordenOperacion.push(2);
+        else                    ordenOperacion.push(1);
+    }
+    if(ordenOperacion[0]<ordenOperacion[1]) return true;
+    else                                    return false;
 }
 
 delegEvent.addEventListener('click', (e)=> {
@@ -123,7 +135,7 @@ delegEvent.addEventListener('click', (e)=> {
     } else if(e.target && e.target.classList.contains('tecla--modScrn')) {
         scrnDisplay(e);
     } else {
-        resEnPantalla();
+        if (e.target && e.target.classList.contains('tecla--resultado')) resEnPantalla();
     }
 });
 document.onkeyup = tecladoPres;
